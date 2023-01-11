@@ -1,4 +1,4 @@
-package rest_api
+package restapi
 
 type TodoList struct {
 	Id          int    `json:"id"`

@@ -1,6 +1,12 @@
 package repository
 
+import (
+	restapi "REST_API"
+	"github.com/jmoiron/sqlx"
+)
+
 type Authorization interface {
+	CreateUser(user restapi.User) (int, error)
 }
 
 type Todolist interface {
@@ -15,6 +21,8 @@ type Repository struct {
 	TodoItem
 }
 
-func NewRepository() *Repository {
-	return &Repository{}
+func NewRepository(db *sqlx.DB) *Repository {
+	return &Repository{
+		Authorization: NewAuthPostgres(db),
+	}
 }
