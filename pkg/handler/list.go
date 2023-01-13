@@ -64,9 +64,43 @@ func (h *Handler) getListById(ctx *gin.Context) {
 }
 
 func (h *Handler) updateList(ctx *gin.Context) {
-
+	userId, err := getUserId(ctx)
+	if err != nil {
+		return
+	}
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		newErrorResponse(ctx, http.StatusBadRequest, "invalid id param")
+	}
+	var input restapi.UpdateListInput
+	if err := ctx.BindJSON(&input); err != nil {
+		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+	if err := h.services.Update(userId, id, input); err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusOK, StatusResponse{
+		Status: "ok",
+	})
 }
 
 func (h *Handler) deleteList(ctx *gin.Context) {
+	userId, err := getUserId(ctx)
+	if err != nil {
+		return
+	}
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		newErrorResponse(ctx, http.StatusBadRequest, "invalid id param")
+	}
 
+	err = h.services.Todolist.Delete(userId, id)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusOK, StatusResponse{
+		Status: "ok",
+	})
 }
