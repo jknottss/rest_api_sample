@@ -3,6 +3,7 @@ package handler
 import (
 	restapi "REST_API"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 )
@@ -10,6 +11,7 @@ import (
 func (h *Handler) createList(ctx *gin.Context) {
 	userId, err := getUserId(ctx)
 	if err != nil {
+		logrus.Debugf("error: %s", err)
 		return
 	}
 	var input restapi.TodoList
@@ -33,6 +35,7 @@ type getAllListsResponse struct {
 func (h *Handler) getAllLists(ctx *gin.Context) {
 	userId, err := getUserId(ctx)
 	if err != nil {
+		logrus.Debugf("error: %s", err)
 		return
 	}
 	lists, err := h.services.Todolist.GetAll(userId)
@@ -48,6 +51,7 @@ func (h *Handler) getAllLists(ctx *gin.Context) {
 func (h *Handler) getListById(ctx *gin.Context) {
 	userId, err := getUserId(ctx)
 	if err != nil {
+		logrus.Debugf("error: %s", err)
 		return
 	}
 	id, err := strconv.Atoi(ctx.Param("id"))
@@ -66,6 +70,7 @@ func (h *Handler) getListById(ctx *gin.Context) {
 func (h *Handler) updateList(ctx *gin.Context) {
 	userId, err := getUserId(ctx)
 	if err != nil {
+		logrus.Debugf("error: %s", err)
 		return
 	}
 	id, err := strconv.Atoi(ctx.Param("id"))
@@ -76,7 +81,7 @@ func (h *Handler) updateList(ctx *gin.Context) {
 	if err := ctx.BindJSON(&input); err != nil {
 		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
 	}
-	if err := h.services.Update(userId, id, input); err != nil {
+	if err := h.services.Todolist.Update(userId, id, input); err != nil {
 		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -88,6 +93,7 @@ func (h *Handler) updateList(ctx *gin.Context) {
 func (h *Handler) deleteList(ctx *gin.Context) {
 	userId, err := getUserId(ctx)
 	if err != nil {
+		logrus.Debugf("error: %s", err)
 		return
 	}
 	id, err := strconv.Atoi(ctx.Param("id"))
