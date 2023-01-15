@@ -6,6 +6,18 @@ import (
 	"net/http"
 )
 
+// @Summary SignUp
+// @Tags auth
+// @Description create account
+// @ID create-account
+// @Accept  json
+// @Produce  json
+// @Param input body restapi.User true "account info"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} myError
+// @Failure 500 {object} myError
+// @Failure default {object} myError
+// @Router /auth/sign-up [post]
 func (h *Handler) signUp(ctx *gin.Context) {
 	var input restapi.User
 
@@ -29,6 +41,18 @@ type signInInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
+// @Summary SignIn
+// @Tags auth
+// @Description login
+// @ID login
+// @Accept  json
+// @Produce  json
+// @Param input body signInInput true "credentials"
+// @Success 200 {string} string "token"
+// @Failure 400,404 {object} myError
+// @Failure 500 {object} myError
+// @Failure default {object} myError
+// @Router /auth/sign-in [post]
 func (h *Handler) signIn(ctx *gin.Context) {
 	var input signInInput
 
